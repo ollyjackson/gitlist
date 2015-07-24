@@ -13,10 +13,19 @@ $(function () {
             matchBrackets: true,
             lineWrapping: true,
             readOnly: true,
-            mode: mode,
-            lineNumberFormatter: function(ln) {
-                return '<a name="L'+ ln +'"></a><a href="#L'+ ln +'">'+ ln +'</a>';
-            }
+            autofocus: true,
+            mode: mode
+        });
+
+        if (window.location.hash.startsWith('#L')) {
+            var linenumber = parseInt(window.location.hash.substring(2));
+            viewer.scrollIntoView(linenumber);
+            viewer.markText({line: linenumber-1, ch:0}, {line:linenumber-1}, {css: 'color:red'});
+        }
+
+        viewer.on("gutterClick", function(cm, n) {
+          var info = cm.lineInfo(n);
+          window.location.hash = "L" + (n+1);
         });
     }
 
